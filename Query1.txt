@@ -1,0 +1,27 @@
+db.createView( "october_topics_tasks", "topics", [
+  {
+     $lookup:
+        {
+           from: "tasks",
+           localField: "topic_id",
+           foreignField: "topic_id",
+           as: "tasksDocs"
+        }
+  },
+  {
+     $project:
+        {
+          _id: 0,
+topic_id:1,
+task_id:"$tasksDocs.task_id",
+Date:1,
+topic_name:1,
+task_name:"$tasksDocs.task_name"
+  }
+  },
+{ $unwind: "$task_id" },
+    { $unwind: "$task_name" }
+] )
+
+
+db.october_topics_tasks.aggregate([{$match:{$expr:{$eq:[{$month:{$dateFromString:{dateString:"$Date", format:"%Y-%m-%d"}}},10]}}}])

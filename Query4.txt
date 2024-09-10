@@ -1,0 +1,9 @@
+db.codekata.aggregate( [
+  {
+     $group:
+        {
+           _id: "$User_id",
+           totalProblemsSolved: { $sum:  {$toInt:"$Problems_solved" }} 
+        }
+  }
+] )

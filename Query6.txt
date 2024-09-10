@@ -1,0 +1,29 @@
+db.attendance.aggregate([
+{
+	$match:{
+		Date:{
+			$gte:"2020-10-15", $lte:"2020-10-31"
+},
+		Status:"Absent"
+		}
+},
+{
+	$lookup:{
+		from :"tasks",
+		localField:"User_id",
+		foreignField:"User_id",
+		as:"tasksDocs"
+		}
+},
+{
+	$match:{
+		"tasksDocs.submitted":"false"
+		}
+},
+{
+	$group:{
+		_id:null,
+		count:{$sum:1}
+		}
+}
+])
